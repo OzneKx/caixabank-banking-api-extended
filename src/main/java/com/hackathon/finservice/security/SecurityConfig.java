@@ -32,7 +32,14 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
                     authorizationManagerRequestMatcherRegistry
-                    .requestMatchers("/api/health", "/api/users/register", "/api/users/login").permitAll()
+                    .requestMatchers(
+                            "/api/health",
+                            "/api/users/register",
+                            "/api/users/login",
+                            "/swagger-ui/**",
+                            "/v3/api-docs/**",
+                            "/v3/api-docs.yaml"
+                    ).permitAll()
                     .anyRequest().authenticated()
             )
             .exceptionHandling(exceptionHandlingConfigurer ->
