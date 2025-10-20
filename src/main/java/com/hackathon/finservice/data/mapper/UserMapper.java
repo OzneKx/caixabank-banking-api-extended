@@ -1,5 +1,6 @@
 package com.hackathon.finservice.data.mapper;
 
+import com.hackathon.finservice.data.entity.Account;
 import com.hackathon.finservice.data.entity.User;
 import com.hackathon.finservice.dto.user.UserRequest;
 import com.hackathon.finservice.dto.user.UserResponse;
@@ -9,7 +10,6 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Mappings;
 import org.mapstruct.NullValuePropertyMappingStrategy;
-
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
@@ -23,12 +23,10 @@ public interface UserMapper {
     User toEntity(UserRequest userRequest);
 
     @Mappings({
-            @Mapping(source = "name", target = "name"),
-            @Mapping(source = "email", target = "email"),
-            @Mapping(target = "accountNumber", ignore = true),
-            @Mapping(target = "accountType", ignore = true)
+            @Mapping(target = "accountNumber", source = "account.accountNumber"),
+            @Mapping(target = "accountType", source = "account.accountType")
     })
-    UserResponse toResponse(User user);
+    UserResponse toResponse(User user, Account account);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mappings({

@@ -36,20 +36,17 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public UserResponse registerUserWithMainAccount(UserRequest userRequest) {
-        PasswordValidator.validatePassword(userRequest.getPassword());
+        PasswordValidator.validatePassword(userRequest.password());
 
-        validateEmailFormat(userRequest.getEmail());
-        validateEmailUniqueness(userRequest.getEmail());
+        validateEmailFormat(userRequest.email());
+        validateEmailUniqueness(userRequest.email());
 
         User user = prepareUserForRegistration(userRequest);
         Account mainAccount = createMainAccountForUser(user);
         user.setAccounts(List.of(mainAccount));
         userRepository.save(user);
 
-        UserResponse userResponse = userMapper.toResponse(user);
-        userResponse.setAccountNumber(mainAccount.getAccountNumber());
-        userResponse.setAccountType(mainAccount.getAccountType());
-        return userResponse;
+        return userMapper.toResponse(user, mainAccount);
     }
 
     private void validateEmailUniqueness(String email) {
@@ -66,7 +63,7 @@ public class UserServiceImpl implements UserService {
 
     private User prepareUserForRegistration(UserRequest userRequest) {
         User user = userMapper.toEntity(userRequest);
-        user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+        user.setPassword(passwordEncoder.encode(userRequest.password()));
         return user;
     }
 

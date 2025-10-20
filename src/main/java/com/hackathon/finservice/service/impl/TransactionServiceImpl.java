@@ -79,10 +79,9 @@ public class TransactionServiceImpl implements TransactionService {
     public MessageResponse cashTransferTransaction(TransferRequest transferRequest) {
         User user = getAuthenticatedUser();
         Account source = getMainAccountFromAuthenticatedUser(user);
-        Account target = getTargetAccountForTransfer(transferRequest);
-
         BigDecimal amount = transferRequest.amount();
         checkIfAmountIsValidForTransaction(amount);
+        Account target = getTargetAccountForTransfer(transferRequest);
 
         if (checkIfAccountHasInsufficientBalance(source, amount)) {
             throw new InsufficientBalanceException();
